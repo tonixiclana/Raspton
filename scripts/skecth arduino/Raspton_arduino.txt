@@ -1,0 +1,83 @@
+// Buffer para almacenar los datos provenientes de la conexion serial
+String inData;
+int cont = 0;
+
+
+//diferentes acciones que se pueden manejar correspondiendo a los pines que le vamos a asignar
+int salon = 12;
+int exterior = 11;
+int garaje = 10;
+int ventilador = 9;
+int motorup = 8;
+int motordown = 7;
+int finalcarreraup = 6;
+int finalcarreradown = 5;
+int estadofinalcarreraup = 0;
+int estadofinalcarreradown = 0;
+
+
+void setup() {
+    pinMode(salon, OUTPUT);
+    pinMode(exterior, OUTPUT);
+    pinMode(garaje, OUTPUT);
+    pinMode(ventilador, OUTPUT);
+    pinMode(motorup, OUTPUT);
+    pinMode(motordown, OUTPUT);
+    pinMode(finalcarreraup, INPUT);
+    pinMode(finalcarreradown, INPUT);
+    
+    Serial.begin(9600);
+    Serial.println("Conexion serial iniciada, esperando orden");
+}
+//bucle principal
+void loop() {
+  estadofinalcarreraup = digitalRead(finalcarreraup);
+  estadofinalcarreradown = digitalRead(finalcarreradown);
+    while (Serial.available() > 0)
+    {
+      //leyendo los caracteres enviados por serial
+        char recieved = Serial.read();
+        inData += recieved;
+        cont += 1;
+        
+        // cuando haya leido 3 caracteres se procesara la cadena
+        if (cont == 3)
+        {
+            // aqui se evaluaran las cadenas y dependiendo de la orden se modifican los estados de los pines correspondientes 
+            if (inData == "H12") {
+              digitalWrite(salon, HIGH);
+              } else if (inData == "L12"){
+               digitalWrite(salon, LOW);
+              } else if (inData == "H11"){
+               digitalWrite(exterior, HIGH);
+              } else if (inData == "L11"){
+               digitalWrite(exterior, LOW);
+              } else if (inData == "H10"){
+               digitalWrite(garaje, HIGH);
+              } else if (inData == "L10"){
+               digitalWrite(garaje, LOW);
+              } else if (inData == "H09"){
+               digitalWrite(ventilador, HIGH);
+              } else if (inData == "L09"){
+               digitalWrite(ventilador, LOW);
+              }else if (inData == "MUP"){
+               digitalWrite(motordown, LOW);
+                digitalWrite(motorup, HIGH);
+                }else if (inData == "MDO"){
+               digitalWrite(motorup, LOW);
+               digitalWrite(motordown, HIGH);
+               }else if (inData == "MOF"){
+               digitalWrite(motorup, LOW);
+               digitalWrite(motordown, LOW);
+              }
+            inData = ""; // limpiamos el buffer y inicializamos el contador
+            cont = 0;
+        }
+    }
+    if (estadofinalcarreraup == HIGH){
+     digitalWrite(motorup, LOW); 
+    }
+    if (estadofinalcarreradown == HIGH){
+     digitalWrite(motordown, LOW); 
+    }
+}

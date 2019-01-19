@@ -1,0 +1,35 @@
+#se importan la libreria pyserial y  la sys
+import serial
+import sys
+
+#-- Se abre el puerto correspondiente a la arduino por usb y se establece 
+# el tiempo de espera maximo
+try:
+    s = serial.Serial('/dev/ttyACM0', 9600)
+    s.timeout=2;
+except serial.SerialException:
+    print "Error al abrir el puerto."
+    sys.exit()
+
+# Se recibe la respuesta del dispositivo 
+# 50 son los bytes maximos que se esperan 
+respuesta=s.read(50);
+#Si la respuesta es mayor a 0 se muestra si no se muestra tiempo agotado
+if len(respuesta)>0 :
+    print "Bienvenido: " + respuesta
+else:
+    print "Tiempo de espera agotado."
+
+# Se envia la orden a la arduino mediante serial
+orden = sys.argv[1]
+s.write(orden)
+
+# Se recibe la respuesta del dispositivo
+# 50 son los bytes maximos que se esperan
+respuesta=s.read(50);
+
+if len(respuesta)>0 :
+    print "Respuesta: " + respuesta
+else:
+    print "Tiempo de espera agotado."
+

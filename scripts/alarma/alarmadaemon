@@ -1,0 +1,25 @@
+#!/bin/bash
+pid=`ps aux | grep "sh /home/pi/alarma/sensor_ir.sh" | tr -s " " | cut -d" " -f8,2 | grep -w "S$" | cut -d" " -f 1`
+
+case "$1" in
+start)
+echo "Encendiendo alarma"
+sh /home/pi/alarma/sensor_ir.sh &
+;;
+restart)
+echo "reiniciando alarma"
+kill $pid
+sh /home/pi/alarma/sensor_ir.sh &
+;;
+stop)
+echo "Apagando alarma"
+echo -n q >/tmp/cmd
+kill $pid
+;;
+*)
+echo "se usa de la siguiente forma alarma {start|stop|restart}"
+exit 3
+;;
+esac
+
+

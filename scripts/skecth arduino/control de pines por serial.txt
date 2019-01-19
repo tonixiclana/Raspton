@@ -1,0 +1,55 @@
+// Buffer para almacenar los datos provenientes de la conexion serial
+String inData;
+int cont = 0;
+
+
+//diferentes habitaciones que se pueden encender correspondiendo a los pines que le vamos a asignar
+int salon = 12;
+int exterior = 11;
+int garaje = 10;
+int ventilador = 9;
+
+void setup() {
+    pinMode(salon, OUTPUT);
+    pinMode(exterior, OUTPUT);
+    pinMode(garaje, OUTPUT);
+    pinMode(ventilador, OUTPUT);
+    Serial.begin(9600);
+    Serial.println("Conexion serial iniciada, esperando orden");
+}
+//bucle principal
+void loop() {
+  
+    while (Serial.available() > 0)
+    {
+      //leyendo los caracteres enviados por serial
+        char recieved = Serial.read();
+        inData += recieved;
+        cont += 1;
+        
+        // cuando haya leido 3 caracteres se procesara la cadena
+        if (cont == 3)
+        {
+            // aqui se evaluaran las cadenas y dependiendo de la orden se modifican los estados de los pines correspondientes 
+            if (inData == "H12") {
+              digitalWrite(salon, HIGH);
+              } else if (inData == "L12"){
+               digitalWrite(salon, LOW);
+              } else if (inData == "H11"){
+               digitalWrite(exterior, HIGH);
+              } else if (inData == "L11"){
+               digitalWrite(exterior, LOW);
+              } else if (inData == "H10"){
+               digitalWrite(garaje, HIGH);
+              } else if (inData == "L10"){
+               digitalWrite(garaje, LOW);
+              } else if (inData == "H09"){
+               digitalWrite(ventilador, HIGH);
+              } else if (inData == "L09"){
+               digitalWrite(ventilador, LOW);
+              }
+            inData = ""; // limpiamos el buffer y inicializamos el contador
+            cont = 0;
+        }
+    }
+}

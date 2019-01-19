@@ -1,0 +1,45 @@
+//seleccionamos los pines de entrada
+int insalon = 2;
+int inexterior = 3;
+int ingaraje = 4;
+int inventilador = 5;
+// seleccionamos los pines de salida
+int outsalon = 6;
+int outexterior = 7;
+int outgaraje = 8;
+int outventilador = 9;
+
+//Variables donde se almacenan los datos leidos
+int salon = 0;
+int exterior = 0;
+int garaje = 0;
+int ventilador = 0;
+
+void setup() {
+  //declaramos los pines como salida o entrada
+    pinMode(outsalon, OUTPUT);
+    pinMode(outexterior, OUTPUT);
+    pinMode(outgaraje, OUTPUT);
+    pinMode(outventilador, OUTPUT);
+    pinMode(insalon, INPUT);
+    pinMode(inexterior, INPUT);
+    pinMode(ingaraje, INPUT);
+    pinMode(inventilador, INPUT);
+    
+}
+//bucle principal
+void loop() {
+  //leemos los valores de los pines de entrada y si están en "HIGH" encendemos los pines de salida asociados
+  salon = digitalRead(insalon);
+  digitalWrite(outsalon, salon);
+  
+  exterior = digitalRead(inexterior);
+  digitalWrite(outexterior, exterior);
+  
+  garaje = digitalRead(ingaraje);
+  digitalWrite(outgaraje, garaje);
+  
+  ventilador = digitalRead(inventilador);
+  digitalWrite(outventilador, ventilador);
+    
+}
